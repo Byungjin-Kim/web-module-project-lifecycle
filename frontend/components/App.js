@@ -8,6 +8,7 @@ export default class App extends React.Component {
     super();
     this.state = {
       todos: [],
+      error: ''
 
     }
   }
@@ -18,7 +19,7 @@ export default class App extends React.Component {
         this.setState({ ...this.state, todos: res.data.data })
       })
       .catch(err => {
-        debugger
+        this.setState({ ...this.state, error: err.response.data.message })
       })
   }
 
@@ -30,6 +31,7 @@ export default class App extends React.Component {
   render() {
     return (
       <div>
+        <div id="error">Error: {this.state.error}</div>
         <div id="todos">
           <h2>Todos:</h2>
           {this.state.todos.map(td => {
@@ -40,7 +42,8 @@ export default class App extends React.Component {
 
           {/* <li>Walking with my Dog</li>
           <li>Taking care of my kids</li>
-          <li>Studying React!</li> */}
+          <li>Studying React!</li> 
+          미리 직접 HTML 만들어 보기!*/}
         </div>
 
         <form>

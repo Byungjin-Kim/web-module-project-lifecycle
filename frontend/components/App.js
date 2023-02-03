@@ -8,10 +8,35 @@ export default class App extends React.Component {
     super();
     this.state = {
       todos: [],
-      error: ''
-
+      error: '',
+      todoNameInput: ''
     }
   }
+
+
+  // for onChange 
+  onTodoChange = evt => {
+    const { value } = evt.target;
+    this.setState({ ...this.state, todoNameInput: value });
+  }
+
+  // Put New Todos for onSubmit
+  postNewTodo = () => {
+    axios.post(URL, { name: this.state.todoNameInput })
+      .then(res => {
+        this.fetchAllTodos()
+        this.setState({ ...this.state, todoNameInput: '' })
+      })
+      .catch(err => {
+        this.setState({ ...this.state, error: err.response.data.message })
+      });
+  }
+
+  onTodoFormSubmit = evt => {
+    evt.preventDefault();
+    this.postNewTodo();
+  }
+
 
   fetchAllTodos = () => {
     axios.get(URL)
@@ -20,13 +45,14 @@ export default class App extends React.Component {
       })
       .catch(err => {
         this.setState({ ...this.state, error: err.response.data.message })
-      })
+      });
   }
 
   componentDidMount() {
     // fetch all todos from the server
     this.fetchAllTodos();
   }
+
 
   render() {
     return (
@@ -37,17 +63,14 @@ export default class App extends React.Component {
           {this.state.todos.map(td => {
             return (<div key={td.id}>{td.name}</div>)
           })}
-
-
-
           {/* <li>Walking with my Dog</li>
           <li>Taking care of my kids</li>
           <li>Studying React!</li> 
           미리 직접 HTML 만들어 보기!*/}
         </div>
 
-        <form>
-          <input />
+        <form id="todoForm" onSubmit={this.onTodoFormSubmit}>
+          <input value={this.state.todoNameInput} onChange={this.onTodoChange} />
           <button>Submit</button>
         </form>
         <button>Hide Completed</button>

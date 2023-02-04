@@ -1,6 +1,9 @@
 import React from 'react'
 import axios from 'axios';
 
+import Form from './Form';
+import TodoList from './TodoList';
+
 const URL = 'http://localhost:9000/api/todos'
 
 export default class App extends React.Component {
@@ -83,29 +86,20 @@ export default class App extends React.Component {
     return (
       <div>
         <div id="error">Error: {this.state.error}</div>
-        <div id="todos">
-          <h2>Todos:</h2>
-          {this.state.todos.reduce((acc, td) => {
 
-            if (this.state.displayCompleteds || !td.completed) return acc.concat(
-              <div onClick={this.toggleCompleted(td.id)} key={td.id}>{td.name}{td.completed ? ' ✔️' : ' '}</div>
-            )
-            return acc
-          }, [])}
+        <TodoList
+          todos={this.state.todos}
+          displayCompleteds={this.state.displayCompleteds}
+          toggleCompleted={this.toggleCompleted}
+        />
+        <Form
+          onTodoFormSubmit={this.onTodoFormSubmit}
+          todoNameInput={this.state.todoNameInput}
+          onTodoChange={this.onTodoChange}
+          toggleDisplayComplteds={this.toggleDisplayComplteds}
+          displayCompleteds={this.state.displayCompleteds}
+        />
 
-          {/* return (<div onClick={this.toggleCompleted(td.id)} key={td.id}>{td.name}{td.completed ? ' ✔️' : ' '}</div>) */}
-
-          {/* <li>Walking with my Dog</li>
-          <li>Taking care of my kids</li>
-          <li>Studying React!</li> 
-          미리 직접 HTML 만들어 보기!*/}
-        </div>
-
-        <form id="todoForm" onSubmit={this.onTodoFormSubmit}>
-          <input value={this.state.todoNameInput} onChange={this.onTodoChange} />
-          <button>Submit</button>
-        </form>
-        <button onClick={this.toggleDisplayComplteds}>{this.state.displayCompleteds ? 'Hide' : 'Show'} Completed</button>
       </div>
 
 

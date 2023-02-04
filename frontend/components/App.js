@@ -27,7 +27,6 @@ export default class App extends React.Component {
     this.setState({ ...this.state, error: err.response.data.message })
   }
 
-
   // for onChange 
   onTodoChange = evt => {
     const { value } = evt.target;
@@ -100,9 +99,6 @@ export default class App extends React.Component {
         />
 
       </div>
-
-
-
     )
   }
 }

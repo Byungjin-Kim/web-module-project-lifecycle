@@ -16,7 +16,6 @@ export default class Form extends React.Component {
           onClick={this.props.toggleDisplayComplteds}>
           {this.props.displayCompleteds ? 'Hide' : 'Show'} Completed
         </button>
-
       </>
     )
   }

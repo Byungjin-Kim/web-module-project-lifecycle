@@ -67,7 +67,6 @@ export default class App extends React.Component {
     this.setState({ ...this.state, displayCompleteds: !this.state.displayCompleteds })
   }
 
-
   fetchAllTodos = () => {
     axios.get(URL)
       .then(res => {

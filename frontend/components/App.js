@@ -9,7 +9,8 @@ export default class App extends React.Component {
     this.state = {
       todos: [],
       error: '',
-      todoNameInput: ''
+      todoNameInput: '',
+      displayCompleteds: true
     }
   }
 
@@ -42,7 +43,25 @@ export default class App extends React.Component {
 
   onTodoFormSubmit = evt => {
     evt.preventDefault();
-    this.postNewTodo();
+    this.postNewTodo(); // Put New Todos for onSubmit
+  }
+
+  // for onClick - just id access!
+  toggleCompleted = id => () => {
+    axios.patch(`${URL}/${id}`)
+      .then(res => {
+        this.setState({
+          ...this.state, todos: this.state.todos.map(td => {
+            if (td.id !== id) return td
+            return res.data.data
+          })
+        })
+      })
+      .catch(this.setAxiosResponseError); // for Error form
+  }
+
+  toggleDisplayComplteds = () => {
+    this.setState({ ...this.state, displayCompleteds: !this.state.displayCompleteds })
   }
 
 
@@ -66,9 +85,16 @@ export default class App extends React.Component {
         <div id="error">Error: {this.state.error}</div>
         <div id="todos">
           <h2>Todos:</h2>
-          {this.state.todos.map(td => {
-            return (<div key={td.id}>{td.name}</div>)
-          })}
+          {this.state.todos.reduce((acc, td) => {
+
+            if (this.state.displayCompleteds || !td.completed) return acc.concat(
+              <div onClick={this.toggleCompleted(td.id)} key={td.id}>{td.name}{td.completed ? ' ✔️' : ' '}</div>
+            )
+            return acc
+          }, [])}
+
+          {/* return (<div onClick={this.toggleCompleted(td.id)} key={td.id}>{td.name}{td.completed ? ' ✔️' : ' '}</div>) */}
+
           {/* <li>Walking with my Dog</li>
           <li>Taking care of my kids</li>
           <li>Studying React!</li> 
@@ -79,7 +105,7 @@ export default class App extends React.Component {
           <input value={this.state.todoNameInput} onChange={this.onTodoChange} />
           <button>Submit</button>
         </form>
-        <button>Hide Completed</button>
+        <button onClick={this.toggleDisplayComplteds}>{this.state.displayCompleteds ? 'Hide' : 'Show'} Completed</button>
       </div>
 
 
